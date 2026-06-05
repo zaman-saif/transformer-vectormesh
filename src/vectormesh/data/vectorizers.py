@@ -467,3 +467,35 @@ def harmonize_legal_reference(match: tuple) -> str:
         law_abbr = law_name
 
     return f"{article_ref} {law_abbr}"
+
+
+def build_imdb_review_pattern() -> re.Pattern:
+    """Match film-related vocabulary in IMDB reviews.
+
+    Each match is a single word/phrase, e.g. "great", "terrible", "acting",
+    "horror". After fitting, each unique matched term becomes one binary
+    feature dimension (1 if the word appears anywhere in the text, 0 if not).
+
+    Examples:
+        "The acting was great but the plot was terrible"
+        → matches: ["acting", "great", "plot", "terrible"]
+    """
+    sentiment = (
+        "great|good|bad|poor|excellent|terrible|awful|brilliant|boring|"
+        "amazing|weak|superb|dreadful|outstanding|mediocre|impressive|"
+        "masterpiece|hilarious|touching|predictable|formulaic"
+    )
+    genre = (
+        "horror|comedy|thriller|drama|romance|action|western|"
+        "documentary|musical|mystery|fantasy|animation"
+    )
+    craft = (
+        "acting|performance|screenplay|script|direction|plot|"
+        "cinematography|dialogue|soundtrack|editing"
+    )
+    return re.compile(rf"\b(?:{sentiment}|{genre}|{craft})\b", re.IGNORECASE)
+
+
+def harmonize_imdb_match(match: str) -> str:
+    """Normalize a matched film vocabulary word to lowercase."""
+    return match.lower()
