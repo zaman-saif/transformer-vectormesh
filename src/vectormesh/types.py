@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from typing import Optional, Tuple, Union
+from typing import Any, Optional, Tuple, Union
 
-from beartype import beartype
-from jaxtyping import Float, jaxtyped
+from jaxtyping import Float
 from pydantic import BaseModel, ConfigDict
 from torch import Tensor, nn
 
@@ -38,6 +37,9 @@ class Cachable(BaseModel):
 
 
 TensorInput = Union[Float[Tensor, "..."], Tuple[Float[Tensor, "..."], ...]]
+"""Documented union for connector/wiring code that accepts either a single tensor
+or a tuple of tensors. Concrete components narrow to one branch and enforce it
+at runtime via @jaxtyped(typechecker=beartype)."""
 
 
 class BaseComponent(nn.Module, ABC):
@@ -47,5 +49,4 @@ class BaseComponent(nn.Module, ABC):
         super().__init__()
 
     @abstractmethod
-    @jaxtyped(typechecker=beartype)
-    def forward(self, tensors: TensorInput) -> Float[Tensor, "..."]: ...
+    def forward(self, *args: Any, **kwargs: Any) -> Float[Tensor, "..."]: ...
