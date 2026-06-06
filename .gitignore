@@ -35,3 +35,4 @@ dev/*
 **/tmp/*
 **/demo/*
 .notebookcache/
+logs/**
