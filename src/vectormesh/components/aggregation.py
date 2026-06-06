@@ -49,7 +49,7 @@ class MaskedMeanAggregator(BaseAggregator):
         self, tensors: Float[Tensor, "batch _ dim"]
     ) -> Float[Tensor, "batch dim"]:
         mask = tensors.abs().sum(dim=-1) > 0  # (batch, chunks), False for padded
-        mask_f = mask.unsqueeze(-1).float()   # (batch, chunks, 1)
+        mask_f = mask.unsqueeze(-1).float()  # (batch, chunks, 1)
         summed = (tensors * mask_f).sum(dim=1)
         count = mask_f.sum(dim=1).clamp(min=1)
         return summed / count
