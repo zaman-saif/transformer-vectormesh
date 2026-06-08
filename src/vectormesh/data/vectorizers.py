@@ -438,15 +438,41 @@ def build_legal_reference_pattern() -> re.Pattern:
         "artikelen 6:251 en 6:252 Burgerlijk Wetboek",
         "artikel 55 Wet Bodembescherming"
     """
-    article_prefix = r"artikel(?:en)?"
+    article_prefix = "[Aa]rt(?:ikel(?:en)?)?"
     article_number = r"\d+(?::\d+)?"
     article_modifier = r"(?:\s+(?:en\s+\d+(?::\d+)?|lid\s+\d+))?"
     book_reference = r"(?:\s+[Bb]oek\s+\d+)?"
     connector = r"(?:\s+van\s+het\s+)?"
 
-    law_name = (
-        r"(?:[Bb]urgerlijk\s+[Ww]etboek|\bBW\b|[Ww]et\s+[Bb]odembescherming|\bWbb\b)"
-    )
+    # law_name = (
+    #    r"(?:[Bb]urgerlijk\s+[Ww]etboek|\bBW\b|[Ww]et\s+[Bb]odembescherming|\bWbb\b)|[Vv]erordening|[Ww]et"
+    # )
+
+    laws = [
+        r"[Bb]urgerlijk\s+[Ww]etboek", r"\bBW\b",
+        r"[Ww]etboek\s+van\s+[Bb]urgerlijke\s+[Rr]echtsvordering", r"\bRv\b",
+        r"[Ww]etboek\s+van\s+[Kk]oophandel", r"\bWvK\b",
+        r"[Ww]etboek\s+van\s+[Ss]trafrecht", r"\bSr\b",
+        r"[Ww]etboek\s+van\s+[Ss]trafvordering", r"\bSv\b",
+        r"[Aa]lgemene\s+[Ww]et\s+[Bb]estuursrecht", r"\bAwb\b",
+        r"[Ww]et\s+[Aa]lgemene\s+[Bb]epalingen\s+[Oo]mgevingsrecht", r"\bWabo\b",
+        r"[Ww]et\s+[Rr]uimtelijke\s+[Oo]rdening", r"\bWro\b",
+        r"[Gg]rondwet", r"\bGw\b",
+        r"[Ee]uropees\s+[Vv]erdrag\s+[Rr]echten\s+[Vv]an\s+[Dd]e\s+[Mm]ens", r"\bEVRM\b",
+        r"[Hh]andvest\s+[Gg]rondrechten\s+[Ee]uropese\s+[Uu]nie",
+        r"[Aa]lgemene\s+[Ww]et\s+[Ii]nzake\s+[Rr]ijksbelastingen", r"\bAWR\b",
+        r"[Ww]et\s+[Ii]nkomstenbelasting",
+        r"[Ww]et\s+[Bb]odembescherming", r"\bWbb\b",
+        r"[Ww]et\s+[Mm]ilieubeheer", r"\bWm\b",
+        r"[Vv]erordening",
+        r"[Ww]et",
+        r"[Ee]uropees",
+        r"[Hh]andvest",
+        r"[Aa]lgemene",
+        r"[Bb]esluit",
+        r"[Vv]erordening",
+    ]
+    law_name = "(?:" + "|".join(sorted(laws, key=len, reverse=True)) + ")"
 
     full_pattern = (
         rf"\b{article_prefix}\s+"
